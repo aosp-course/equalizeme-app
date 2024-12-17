@@ -1,0 +1,1 @@
+# EQUALIZEME APP

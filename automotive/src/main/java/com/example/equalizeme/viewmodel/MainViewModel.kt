@@ -1,5 +1,6 @@
 package com.example.equalizeme.viewmodel
 
+import android.provider.ContactsContract.Profile
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -19,25 +20,6 @@ class MainViewModel(private val repository: UserProfileRepository) : ViewModel()
     //List of profiles
     val profilesFlow = repository.userProfilesFlow.shareIn(viewModelScope, SharingStarted.Eagerly)
 
-    init {
-        viewModelScope.launch {
-            val profiles = profilesFlow.firstOrNull() ?: emptyList()
-            if (profiles.isEmpty()) {
-                val defaultProfile = UserProfile.newBuilder()
-                    .setName("Profile 1")
-                    .setEqualizerInfo(
-                        EqualizerInfo.newBuilder()
-                            .setBass(5)
-                            .setMid(5)
-                            .setTreble(5)
-                            .build()
-                    )
-                    .build()
-                addProfile(defaultProfile)
-            }
-        }
-    }
-
     // CurrentProfile
     private val currentProfileIndexFlow = MutableStateFlow(-1)
     val currentProfileFlow = profilesFlow.combine(currentProfileIndexFlow) { profiles, index ->
@@ -47,13 +29,18 @@ class MainViewModel(private val repository: UserProfileRepository) : ViewModel()
     //List of equalizers
     val currentEqualizer = currentProfileFlow.map { profile -> profile?.equalizerInfo }
 
-    fun addProfile(profile: UserProfile) {
+    fun addProfile() {
         viewModelScope.launch {
             val profiles = profilesFlow.firstOrNull() ?: emptyList()
-            val newProfileIndex = profiles.size
+
+            if(profiles.size >= 3) {
+                Log.e("MainViewModel:addProfile", "Max number of profiles reached!")
+                return@launch
+            }
+
+            val profile = createDefaultProfile("Profile ${profiles.size+1}")
 
             repository.createProfile(profile)
-            currentProfileIndexFlow.value = newProfileIndex
         }
     }
 
@@ -74,6 +61,19 @@ class MainViewModel(private val repository: UserProfileRepository) : ViewModel()
 
             repository.setEqualizerInfo(index, equalizer)
         }
+    }
+
+    private fun createDefaultProfile(name: String) : UserProfile {
+        return UserProfile.newBuilder()
+            .setName(name)
+            .setEqualizerInfo(
+                EqualizerInfo.newBuilder()
+                    .setBass(5)
+                    .setMid(5)
+                    .setTreble(5)
+                    .build()
+            )
+            .build()
     }
 }
 

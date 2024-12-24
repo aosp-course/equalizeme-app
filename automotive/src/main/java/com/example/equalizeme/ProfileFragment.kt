@@ -5,13 +5,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.equalizeme.databinding.FragmentProfileBinding
 import com.example.equalizeme.databinding.ItemPerfilBinding
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
@@ -37,43 +41,39 @@ class ProfileFragment : Fragment() {
         mViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
 
         perfilItem1 = binding.profileItem1
-        perfilItem1.name.text = "Profile 1"
-        perfilItem1.icon.visibility = View.GONE
-
         perfilItem2 = binding.profileItem2
-        binding.addButton.root.setOnClickListener { adicionarPerfil() }
+        perfilItem3 = binding.profileItem3
 
-        binding.profileItem1.root.setOnClickListener {
-            mViewModel.selectProfile(profile1)
-            findNavController().navigate(R.id.action_firstFragment_to_secondFragment)
+        val profileViews = listOf(perfilItem1, perfilItem2, perfilItem3)
+
+        // Observe profiles flow
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.profilesFlow.collect { profiles ->
+                    profileViews.forEachIndexed { index, view->
+                        val isAddProfileBtn = index == profiles.size
+                        val profile = profiles.elementAtOrNull(index)
+
+                        view.root.visibility = if(profile == null || isAddProfileBtn) View.GONE else View.VISIBLE
+                        view.name.text = profile?.name ?: ""
+                        view.icon.visibility = if(isAddProfileBtn) View.VISIBLE else View.INVISIBLE
+
+                        if(isAddProfileBtn) {
+                            view.root.setOnClickListener {  mViewModel.addProfile() }
+                        } else if (profile != null) {
+                            view.root.setOnClickListener {
+                                mViewModel.selectProfile(index)
+                                findNavController().navigate(R.id.action_firstFragment_to_secondFragment)
+                            }
+                        } else {
+                            view.root.setOnClickListener {  }
+                        }
+                    }
+                }
+            }
         }
 
         return view
-    }
-
-    private fun adicionarPerfil() {
-        numPerfis++
-        when (numPerfis) {
-            1 -> {
-                perfilItem2.root.visibility = View.VISIBLE
-                perfilItem2.name.text = "Profile 2"
-                perfilItem2.icon.visibility = View.GONE
-
-                val profile2 = Profile(2, "Profile 2", Equalizer())
-                mViewModel.addProfile(profile2)
-            }
-            2 -> {
-                //val addButtonTextView = addButton.findViewById<TextView>(R.id.text_nome_perfil)
-                binding.addButton.name.text = "Profile 3"
-                binding.addButton.icon.visibility = View.GONE
-                binding.addButton.root.visibility = View.VISIBLE
-                //addButton.findViewById<ImageView>(R.id.addIcon).visibility = View.GONE
-                binding.addButton.root.setOnClickListener(null) // Remove o listener
-
-                val profile3 = Profile(3, "Profile 3", Equalizer())
-                mViewModel.addProfile(profile3)
-            }
-        }
     }
 
     override fun onDestroyView() {

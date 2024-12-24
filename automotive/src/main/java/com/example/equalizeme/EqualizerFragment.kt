@@ -5,8 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.equalizeme.viewmodel.MainViewModel
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -38,6 +42,20 @@ class EqualizerFragment : Fragment() {
     ): View? {
 
         mViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
+
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                mViewModel.currentEqualizer.collect {
+                    val bass = it?.bass ?: 5
+                    val mid = it?.mid ?: 5
+                    val treble = it?.treble ?: 5
+
+                    // TODO: Apply BMT to sliders
+                }
+            }
+        }
+
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_equalizer, container, false)

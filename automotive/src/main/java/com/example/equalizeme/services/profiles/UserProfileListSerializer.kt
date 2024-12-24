@@ -2,8 +2,7 @@ package com.example.equalizeme.services.profiles
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
-import com.example.equalizeme.UserProfile
-import com.example.equalizeme.UserProfileList
+import com.example.equalizeme.model.UserProfileList
 
 import com.google.protobuf.InvalidProtocolBufferException
 import java.io.InputStream

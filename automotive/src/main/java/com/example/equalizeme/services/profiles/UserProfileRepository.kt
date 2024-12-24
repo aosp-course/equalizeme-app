@@ -2,10 +2,10 @@ package com.example.equalizeme.services.profiles
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import com.example.equalizeme.EqualizerInfo
-import com.example.equalizeme.UserProfile
-import com.example.equalizeme.UserProfileList
-import com.example.equalizeme.copy
+import com.example.equalizeme.model.EqualizerInfo
+import com.example.equalizeme.model.UserProfile
+import com.example.equalizeme.model.UserProfileList
+import com.example.equalizeme.model.copy
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -16,7 +16,7 @@ class UserProfileRepository (
     private val userProfileListDatastore: DataStore<UserProfileList>,
     context: Context
 ) {
-    private val userProfilesFlow : Flow<List<UserProfile>> = userProfileListDatastore.data.map { value ->
+    val userProfilesFlow : Flow<List<UserProfile>> = userProfileListDatastore.data.map { value ->
        value.profilesList
     }
 
@@ -50,6 +50,4 @@ class UserProfileRepository (
             }
         }
     }
-
-
 }

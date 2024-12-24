@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option java_package = "com.example.equalizeme";
+option java_package = "com.example.equalizeme.model";
 option java_multiple_files = true;
 
 message UserProfileList {

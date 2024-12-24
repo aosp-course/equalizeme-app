@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
+import com.example.equalizeme.model.UserProfileList
 import com.example.equalizeme.services.profiles.UserProfileListSerializer
 import com.example.equalizeme.services.profiles.UserProfileRepository
 

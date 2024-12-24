@@ -9,8 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.equalizeme.databinding.FragmentProfileBinding
 import com.example.equalizeme.databinding.ItemPerfilBinding
-import com.example.equalizeme.model.Equalizer
-import com.example.equalizeme.model.Profile
+import com.example.equalizeme.model.EqualizerInfo
+import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.viewmodel.MainViewModel
 
 
@@ -39,9 +39,6 @@ class ProfileFragment : Fragment() {
         perfilItem1 = binding.profileItem1
         perfilItem1.name.text = "Profile 1"
         perfilItem1.icon.visibility = View.GONE
-
-        val profile1 = Profile(1, "Profile 1", Equalizer())
-        mViewModel.addProfile(profile1)
 
         perfilItem2 = binding.profileItem2
         binding.addButton.root.setOnClickListener { adicionarPerfil() }

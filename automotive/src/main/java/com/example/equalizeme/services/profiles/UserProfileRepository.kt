@@ -2,6 +2,7 @@ package com.example.equalizeme.services.profiles
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.model.UserProfileList
@@ -12,10 +13,18 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
+private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
+
+private val Context.userProfileListStore: DataStore<UserProfileList> by dataStore(
+    fileName = DATA_STORE_FILE_NAME,
+    serializer = UserProfileListSerializer,
+)
+
 class UserProfileRepository (
-    private val userProfileListDatastore: DataStore<UserProfileList>,
     context: Context
 ) {
+    private val userProfileListDatastore: DataStore<UserProfileList> = context.userProfileListStore
+
     val userProfilesFlow : Flow<List<UserProfile>> = userProfileListDatastore.data.map { value ->
        value.profilesList
     }
@@ -46,7 +55,8 @@ class UserProfileRepository (
     private suspend fun saveProfiles(profiles: List<UserProfile>) {
         withContext(Dispatchers.IO) {
             userProfileListDatastore.updateData { currentData ->
-                currentData.toBuilder().clearProfiles().addAllProfiles(profiles).build()
+                val data = currentData.toBuilder().clearProfiles().addAllProfiles(profiles).build()
+                data
             }
         }
     }

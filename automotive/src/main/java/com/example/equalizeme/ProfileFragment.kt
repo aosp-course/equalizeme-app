@@ -1,10 +1,12 @@
 package com.example.equalizeme
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -24,7 +26,7 @@ class ProfileFragment : Fragment() {
     private lateinit var perfilItem1: ItemPerfilBinding
     private lateinit var perfilItem2: ItemPerfilBinding
     private lateinit var perfilItem3: ItemPerfilBinding
-    private lateinit var mViewModel: MainViewModel
+    private val mViewModel by activityViewModels<MainViewModel>()
 
     private var _binding: FragmentProfileBinding? = null
     // This property is only valid between onCreateView and
@@ -38,8 +40,6 @@ class ProfileFragment : Fragment() {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        mViewModel = ViewModelProvider(requireActivity())[MainViewModel::class.java]
-
         perfilItem1 = binding.profileItem1
         perfilItem2 = binding.profileItem2
         perfilItem3 = binding.profileItem3
@@ -49,17 +49,20 @@ class ProfileFragment : Fragment() {
         // Observe profiles flow
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
+                Log.i("ProfileFrag", "Starting launch")
                 mViewModel.profilesFlow.collect { profiles ->
                     profileViews.forEachIndexed { index, view->
                         val isAddProfileBtn = index == profiles.size
                         val profile = profiles.elementAtOrNull(index)
 
-                        view.root.visibility = if(profile == null || isAddProfileBtn) View.GONE else View.VISIBLE
+                        view.root.visibility = if(profile == null && !isAddProfileBtn) View.GONE else View.VISIBLE
                         view.name.text = profile?.name ?: ""
                         view.icon.visibility = if(isAddProfileBtn) View.VISIBLE else View.INVISIBLE
 
                         if(isAddProfileBtn) {
-                            view.root.setOnClickListener {  mViewModel.addProfile() }
+                            view.root.setOnClickListener {
+                                mViewModel.addProfile()
+                            }
                         } else if (profile != null) {
                             view.root.setOnClickListener {
                                 mViewModel.selectProfile(index)

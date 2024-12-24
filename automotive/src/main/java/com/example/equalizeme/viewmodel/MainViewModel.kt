@@ -1,9 +1,8 @@
 package com.example.equalizeme.viewmodel
 
-import android.provider.ContactsContract.Profile
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
@@ -16,9 +15,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: UserProfileRepository) : ViewModel() {
+class MainViewModel(private val application: Application) : AndroidViewModel(application) {
+    private val repository by lazy { UserProfileRepository(application.applicationContext) }
+
     //List of profiles
-    val profilesFlow = repository.userProfilesFlow.shareIn(viewModelScope, SharingStarted.Eagerly)
+    val profilesFlow = repository.userProfilesFlow
 
     // CurrentProfile
     private val currentProfileIndexFlow = MutableStateFlow(-1)
@@ -31,7 +32,11 @@ class MainViewModel(private val repository: UserProfileRepository) : ViewModel()
 
     fun addProfile() {
         viewModelScope.launch {
-            val profiles = profilesFlow.firstOrNull() ?: emptyList()
+            val profiles = profilesFlow.firstOrNull()
+
+            if (profiles == null) {
+                return@launch
+            }
 
             if(profiles.size >= 3) {
                 Log.e("MainViewModel:addProfile", "Max number of profiles reached!")
@@ -75,14 +80,15 @@ class MainViewModel(private val repository: UserProfileRepository) : ViewModel()
             )
             .build()
     }
-}
 
-//class MainViewModelFactory() : ViewModelProvider.Factory {
-//    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-//        if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-//            @Suppress("UNCHECKED_CAST")
-//            return MainViewModel() as T
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+//                val application = (this[APPLICATION_KEY] as Application)
+//                return@initializer MainViewModel(
+//                    UserProfileRepository(application.applicationContext)
+//                )
+//            }
 //        }
-//        throw IllegalArgumentException("Unknown ViewModel class")
 //    }
-//}
+}

@@ -68,6 +68,49 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    fun setBass(bass: Int) {
+        viewModelScope.launch {
+            val index = currentProfileIndexFlow.value
+
+            // Ensure profile exists
+            val profile = currentProfileFlow.firstOrNull()
+            if(profile == null) {
+                Log.e("MainViewModel:setBass"," Profile not found!")
+                return@launch
+            }
+            Log.e("MainViewModel", "set bass: $bass")
+            repository.setBass(index, bass)
+        }
+    }
+
+    fun setMid(mid: Int) {
+        viewModelScope.launch {
+            val index = currentProfileIndexFlow.value
+
+            // Ensure profile exists
+            val profile = currentProfileFlow.firstOrNull()
+            if(profile == null) {
+                Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                return@launch
+            }
+            repository.setMid(index, mid)
+        }
+    }
+
+    fun setTreble(treble: Int) {
+        viewModelScope.launch {
+            val index = currentProfileIndexFlow.value
+
+            // Ensure profile exists
+            val profile = currentProfileFlow.firstOrNull()
+            if(profile == null) {
+                Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                return@launch
+            }
+            repository.setTreble(index, treble)
+        }
+    }
+
     private fun createDefaultProfile(name: String) : UserProfile {
         return UserProfile.newBuilder()
             .setName(name)
@@ -80,15 +123,4 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
             )
             .build()
     }
-
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-//                val application = (this[APPLICATION_KEY] as Application)
-//                return@initializer MainViewModel(
-//                    UserProfileRepository(application.applicationContext)
-//                )
-//            }
-//        }
-//    }
 }

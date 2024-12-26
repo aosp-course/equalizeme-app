@@ -55,8 +55,6 @@ class UserProfileRepository (
 
     suspend fun setBass(profileIndex: Int, newBass: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
-        //var eq = profiles[profileIndex].equalizerInfo
-        //        eq.apply { bass = newBass }
         val equalizer = equalizerInfo {
             this.bass = newBass
             this.mid = profiles[profileIndex].equalizerInfo.mid
@@ -69,8 +67,6 @@ class UserProfileRepository (
 
     suspend fun setMid(profileIndex: Int, newMid: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
-        //var eq = profiles[profileIndex].equalizerInfo
-        //        eq.apply { bass = newBass }
         val equalizer = equalizerInfo {
             this.bass = profiles[profileIndex].equalizerInfo.bass
             this.mid = newMid
@@ -83,8 +79,6 @@ class UserProfileRepository (
 
     suspend fun setTreble(profileIndex: Int, newTreble: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
-        //var eq = profiles[profileIndex].equalizerInfo
-        //        eq.apply { bass = newBass }
         val equalizer = equalizerInfo {
             this.bass = profiles[profileIndex].equalizerInfo.bass
             this.mid = profiles[profileIndex].equalizerInfo.mid

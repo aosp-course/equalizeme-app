@@ -39,6 +39,39 @@ class EqualizerFragment : Fragment() {
     private val mViewModel by activityViewModels<MainViewModel>()
     private val TAG = "EqualizerFragment"
 
+    private val seekListener: SeekBar.OnSeekBarChangeListener = object :
+        SeekBar.OnSeekBarChangeListener {
+        override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+            Log.i(TAG, "progress change progress: $progress")
+            when (seekBar.id) {
+                R.id.seekBar1 -> {
+                    mViewModel.setBass(progress)
+                }
+
+                R.id.seekBar2 -> {
+                    mViewModel.setMid(progress)
+                }
+
+                R.id.seekBar3 -> {
+                    mViewModel.setTreble(progress)
+                }
+
+                else -> {
+                    Log.i(TAG, "unknown bar percent: $progress")
+                }
+            }
+        }
+
+        override fun onStartTrackingTouch(p0: SeekBar?) {
+            //Do nothing
+        }
+
+        override fun onStopTrackingTouch(p0: SeekBar?) {
+            //Do nothing
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -55,68 +88,27 @@ class EqualizerFragment : Fragment() {
         val bassSeekBar = binding.seekBar1
         val midSeekBar = binding.seekBar2
         val trebleSeekBar = binding.seekBar3
+        val view = binding.root
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.currentEqualizer.collect {
                     val currentBass = it?.bass ?: 5
                     val currentMid = it?.mid ?: 5
                     val currentTreble = it?.treble ?: 5
-                    Log.e(TAG, "Current bass: $currentBass")
+                    Log.d(TAG, "Current progress for bass: $currentBass | mid: $currentMid | treble: $currentTreble")
                     binding.seekBar1.progress = currentBass
                     // Apply BMT equalizer values to sliders:
                     bassSeekBar.apply {
                         progress = currentBass
-                        Log.d(TAG, "Bass initial progress: $progress")
-                        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                                Log.d(TAG, "Bass - onProgressChanged")
-                                //Do nothing
-                            }
-
-                            override fun onStartTrackingTouch(p0: SeekBar?) {
-                                //Do nothing
-                            }
-
-                            override fun onStopTrackingTouch(p0: SeekBar?) {
-                                Log.d(TAG, "Bass - onStopTrackingTouch: "+(p0?.progress ?: 5))
-                                mViewModel.setBass(p0?.progress ?: 5)
-                            }
-
-                        })
+                        setOnSeekBarChangeListener(seekListener)
                     }
                     midSeekBar.apply {
                         progress = currentMid
-                        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                                //Do nothing
-                            }
-
-                            override fun onStartTrackingTouch(p0: SeekBar?) {
-                                //Do nothing
-                            }
-
-                            override fun onStopTrackingTouch(p0: SeekBar?) {
-                                mViewModel.setMid(p0?.progress ?: 5)
-                            }
-
-                        })
+                        setOnSeekBarChangeListener(seekListener)
                     }
                     trebleSeekBar.apply {
                         progress = currentTreble
-                        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                                //Do nothing
-                            }
-
-                            override fun onStartTrackingTouch(p0: SeekBar?) {
-                                //Do nothing
-                            }
-
-                            override fun onStopTrackingTouch(p0: SeekBar?) {
-                                mViewModel.setBass(p0?.progress ?: 5)
-                            }
-
-                        })
+                        setOnSeekBarChangeListener(seekListener)
                     }
                 }
             }
@@ -124,7 +116,7 @@ class EqualizerFragment : Fragment() {
 
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_equalizer, container, false)
+        return view
     }
 
     companion object {

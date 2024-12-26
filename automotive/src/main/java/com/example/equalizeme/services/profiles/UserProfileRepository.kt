@@ -7,6 +7,7 @@ import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.model.UserProfileList
 import com.example.equalizeme.model.copy
+import com.example.equalizeme.model.equalizerInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -50,6 +51,48 @@ class UserProfileRepository (
 
             profiles[profileIndex] = profiles[profileIndex].copy { equalizerInfo = equalizer }
             saveProfiles(profiles)
+    }
+
+    suspend fun setBass(profileIndex: Int, newBass: Int) {
+        val profiles = userProfilesFlow.first().toMutableList()
+        //var eq = profiles[profileIndex].equalizerInfo
+        //        eq.apply { bass = newBass }
+        val equalizer = equalizerInfo {
+            this.bass = newBass
+            this.mid = profiles[profileIndex].equalizerInfo.mid
+            this.treble = profiles[profileIndex].equalizerInfo.treble}
+        profiles[profileIndex] = profiles[profileIndex].copy {
+            equalizerInfo = equalizer
+        }
+        saveProfiles(profiles)
+    }
+
+    suspend fun setMid(profileIndex: Int, newMid: Int) {
+        val profiles = userProfilesFlow.first().toMutableList()
+        //var eq = profiles[profileIndex].equalizerInfo
+        //        eq.apply { bass = newBass }
+        val equalizer = equalizerInfo {
+            this.bass = profiles[profileIndex].equalizerInfo.bass
+            this.mid = newMid
+            this.treble = profiles[profileIndex].equalizerInfo.treble}
+        profiles[profileIndex] = profiles[profileIndex].copy {
+            equalizerInfo = equalizer
+        }
+        saveProfiles(profiles)
+    }
+
+    suspend fun setTreble(profileIndex: Int, newTreble: Int) {
+        val profiles = userProfilesFlow.first().toMutableList()
+        //var eq = profiles[profileIndex].equalizerInfo
+        //        eq.apply { bass = newBass }
+        val equalizer = equalizerInfo {
+            this.bass = profiles[profileIndex].equalizerInfo.bass
+            this.mid = profiles[profileIndex].equalizerInfo.mid
+            this.treble = newTreble}
+        profiles[profileIndex] = profiles[profileIndex].copy {
+            equalizerInfo = equalizer
+        }
+        saveProfiles(profiles)
     }
 
     private suspend fun saveProfiles(profiles: List<UserProfile>) {

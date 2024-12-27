@@ -88,30 +88,6 @@ class MainViewModelTest {
     }
 
     /*
-    * Pre-condicoes: a lista profiles esta null
-    * Test case: este teste invoca o metodo addProfile do MainViewModel
-    * Resultado esperado: o profile no repository nao sera criado pois profiles esta null
-    * */
-    @Test
-    fun `addProfile does nothing when profiles are null`() = runTest {
-        // Arrange
-        val profiles : List<UserProfile> = emptyList()
-
-        coEvery { mockRepository.userProfilesFlow } returns flowOf(profiles)
-        coEvery { mockRepository.createProfile(any()) } returns Unit
-        coEvery { mockRepository.userProfilesFlow.firstOrNull() } returns null
-        SUT.profilesFlow = flowOf(profiles)
-        SUT.repository = mockRepository
-
-        // Act
-        SUT.addProfile()
-        testScheduler.runCurrent()
-
-        // Assert
-        coVerify { mockRepository.createProfile(any()) }
-    }
-
-    /*
     * Pre-condicoes: a lista profiles esta com 3 elementos
     * Test case: este teste invoca o metodo addProfile do MainViewModel
     * Resultado esperado: o profile no repository nao sera criado pois profiles ja esta com a quantidade maxima

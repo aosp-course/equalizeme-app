@@ -26,26 +26,41 @@ class UserProfileRepository (
 ) {
     private val userProfileListDatastore: DataStore<UserProfileList> = context.userProfileListStore
 
+    /**
+     * A flow of the list of user profiles.
+     */
     val userProfilesFlow : Flow<List<UserProfile>> = userProfileListDatastore.data.map { value ->
        value.profilesList
     }
 
+    /**
+     * Returns the user profile at the given index.
+     */
     suspend fun getProfileByIndex(index: Int): UserProfile? {
         return userProfilesFlow.first().elementAtOrNull(index)
     }
 
+    /**
+     * Returns a flow of the user profile at the given index.
+     */
     fun getProfileFlowByIndex(index: Int): Flow<UserProfile?> {
         return userProfilesFlow.map { profiles ->
             profiles.elementAtOrNull(index)
         }
     }
 
+    /**
+     * Creates a new user profile with the given name and adds it to the repository.
+     */
     suspend fun createProfile(profile: UserProfile) {
         val profiles = userProfilesFlow.first().toMutableList()
         profiles.add(profile)
         saveProfiles(profiles)
     }
 
+    /**
+     * Set a new equalizer for the user profile at the given index.
+     */
     suspend fun setEqualizerInfo(profileIndex: Int, equalizer: EqualizerInfo) {
         val profiles = userProfilesFlow.first().toMutableList()
 
@@ -53,6 +68,9 @@ class UserProfileRepository (
             saveProfiles(profiles)
     }
 
+    /**
+     * Set a new bass value for the user profile at the given index.
+     */
     suspend fun setBass(profileIndex: Int, newBass: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
         val equalizer = equalizerInfo {
@@ -65,6 +83,9 @@ class UserProfileRepository (
         saveProfiles(profiles)
     }
 
+    /**
+     * Set a new midrange value for the user profile at the given index.
+     */
     suspend fun setMid(profileIndex: Int, newMid: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
         val equalizer = equalizerInfo {
@@ -77,6 +98,9 @@ class UserProfileRepository (
         saveProfiles(profiles)
     }
 
+    /**
+     * Set a new treble value for the user profile at the given index.
+     */
     suspend fun setTreble(profileIndex: Int, newTreble: Int) {
         val profiles = userProfilesFlow.first().toMutableList()
         val equalizer = equalizerInfo {
@@ -89,6 +113,9 @@ class UserProfileRepository (
         saveProfiles(profiles)
     }
 
+    /**
+     * Save the list of user profiles to the data store.
+     */
     private suspend fun saveProfiles(profiles: List<UserProfile>) {
         withContext(Dispatchers.IO) {
             userProfileListDatastore.updateData { currentData ->

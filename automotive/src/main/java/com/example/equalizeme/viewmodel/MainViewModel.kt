@@ -3,6 +3,8 @@ package com.example.equalizeme.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
@@ -15,14 +17,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val application: Application) : AndroidViewModel(application) {
-    private val repository by lazy { UserProfileRepository(application.applicationContext) }
-
-    //List of profiles
-    val profilesFlow = repository.userProfilesFlow
-
+open class MainViewModel(private val application: Application) : AndroidViewModel(application) {
     // CurrentProfile
     private val currentProfileIndexFlow = MutableStateFlow(-1)
+    var repository = UserProfileRepository(application.applicationContext)
+
+    //List of profiles
+    var profilesFlow = repository.userProfilesFlow
+
     val currentProfileFlow = profilesFlow.combine(currentProfileIndexFlow) { profiles, index ->
         return@combine profiles.elementAtOrNull(index)
     }
@@ -43,13 +45,12 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     fun addProfile() {
         viewModelScope.launch {
             val profiles = profilesFlow.firstOrNull()
-
             if (profiles == null) {
                 return@launch
             }
 
             if(profiles.size >= 3) {
-                Log.e("MainViewModel:addProfile", "Max number of profiles reached!")
+                //Log.e("MainViewModel:addProfile", "Max number of profiles reached!")
                 return@launch
             }
 
@@ -66,31 +67,6 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
      */
     fun selectProfile(profileIndex: Int) {
         currentProfileIndexFlow.value = profileIndex
-    }
-
-    /**
-     * Updates the equalizer settings for the currently selected profile.
-     *
-     * This function launches a coroutine to perform the following steps:
-     * 1. Retrieves the index of the currently selected profile.
-     * 2. Ensures that the profile exists. If it does not, logs an error and returns early.
-     * 3. Updates the equalizer settings for the profile in the repository.
-     *
-     * @param equalizer The new equalizer settings to apply.
-     */
-    fun updateEqualizer(equalizer: EqualizerInfo) {
-        viewModelScope.launch {
-            val index = currentProfileIndexFlow.value
-
-            // Ensure profile exists
-            val profile = currentProfileFlow.firstOrNull()
-            if(profile == null) {
-                Log.e("MainViewModel:updateEqualizer"," Profile not found!")
-                return@launch
-            }
-
-            repository.setEqualizerInfo(index, equalizer)
-        }
     }
 
     /**

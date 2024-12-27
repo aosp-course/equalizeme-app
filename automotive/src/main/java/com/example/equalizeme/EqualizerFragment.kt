@@ -6,19 +6,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.SeekBar
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.equalizeme.databinding.FragmentEqualizerBinding
-import com.example.equalizeme.databinding.FragmentProfileBinding
-import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
-import java.util.function.Consumer
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,6 +34,9 @@ class EqualizerFragment : Fragment() {
     private val mViewModel by activityViewModels<MainViewModel>()
     private val TAG = "EqualizerFragment"
 
+    /**
+     * Listener for sliders changes
+     */
     private val seekListener: SeekBar.OnSeekBarChangeListener = object :
         SeekBar.OnSeekBarChangeListener {
         override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {

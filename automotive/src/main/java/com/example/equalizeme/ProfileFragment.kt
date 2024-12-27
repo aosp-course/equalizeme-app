@@ -8,21 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.equalizeme.databinding.FragmentProfileBinding
 import com.example.equalizeme.databinding.ItemPerfilBinding
-import com.example.equalizeme.model.EqualizerInfo
-import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.viewmodel.MainViewModel
 import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
 
-    private var numPerfis = 0
     private lateinit var perfilItem1: ItemPerfilBinding
     private lateinit var perfilItem2: ItemPerfilBinding
     private lateinit var perfilItem3: ItemPerfilBinding
@@ -36,7 +32,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentProfileBinding.inflate(inflater, container, false)
         val view = binding.root
 

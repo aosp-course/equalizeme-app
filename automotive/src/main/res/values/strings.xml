@@ -6,5 +6,6 @@
     <string name="mid">Mid</string>
     <string name="treble">Treble</string>
     <string name="select_your_profile">SELECT YOUR PROFILE</string>
+    <string name="selected_profile">PROFILE</string>
     <string name="icon">icon</string>
 </resources>

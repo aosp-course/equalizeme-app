@@ -5,6 +5,28 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundPrimary">
 
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/arrow_back_ios_new_24dp_ffffff_fill0_wght400_grad0_opsz24"
+        android:layout_marginTop="@dimen/button_top_margin"
+        android:layout_marginStart="@dimen/title_start"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/selectedProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_profile"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="@dimen/title_top"
+        android:layout_marginStart="@dimen/title_start"
+        android:textSize="@dimen/title_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/back_button" />
+
     <!-- Bar Section -->
     <SeekBar
         android:id="@+id/seekBar1"

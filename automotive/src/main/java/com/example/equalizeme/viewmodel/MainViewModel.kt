@@ -30,6 +30,16 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
     //List of equalizers
     val currentEqualizer = currentProfileFlow.map { profile -> profile?.equalizerInfo }
 
+    /**
+     * Adds a new user profile to the repository.
+     *
+     * This function launches a coroutine to perform the following steps:
+     * 1. Retrieves the current list of profiles.
+     * 2. Checks if the list of profiles is null. If it is, the function returns early.
+     * 3. Checks if the maximum number of profiles (3) has been reached. If it has, logs an error and returns early.
+     * 4. Creates a new default profile with a name based on the current number of profiles.
+     * 5. Adds the newly created profile to the repository.
+     */
     fun addProfile() {
         viewModelScope.launch {
             val profiles = profilesFlow.firstOrNull()
@@ -49,10 +59,25 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    /**
+     * Selects a user profile by its index.
+     *
+     * @param profileIndex The index of the profile to select.
+     */
     fun selectProfile(profileIndex: Int) {
         currentProfileIndexFlow.value = profileIndex
     }
 
+    /**
+     * Updates the equalizer settings for the currently selected profile.
+     *
+     * This function launches a coroutine to perform the following steps:
+     * 1. Retrieves the index of the currently selected profile.
+     * 2. Ensures that the profile exists. If it does not, logs an error and returns early.
+     * 3. Updates the equalizer settings for the profile in the repository.
+     *
+     * @param equalizer The new equalizer settings to apply.
+     */
     fun updateEqualizer(equalizer: EqualizerInfo) {
         viewModelScope.launch {
             val index = currentProfileIndexFlow.value
@@ -68,6 +93,16 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    /**
+     * Sets the bass level for the currently selected profile.
+     *
+     * This function launches a coroutine to perform the following steps:
+     * 1. Retrieves the index of the currently selected profile.
+     * 2. Ensures that the profile exists. If it does not, logs an error and returns early.
+     * 3. Sets the bass level for the profile in the repository.
+     *
+     * @param bass The new bass level to apply.
+     */
     fun setBass(bass: Int) {
         viewModelScope.launch {
             val index = currentProfileIndexFlow.value
@@ -78,11 +113,20 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
                 Log.e("MainViewModel:setBass"," Profile not found!")
                 return@launch
             }
-            Log.e("MainViewModel", "set bass: $bass")
             repository.setBass(index, bass)
         }
     }
 
+    /**
+     * Sets the mid level for the currently selected profile.
+     *
+     * This function launches a coroutine to perform the following steps:
+     * 1. Retrieves the index of the currently selected profile.
+     * 2. Ensures that the profile exists. If it does not, logs an error and returns early.
+     * 3. Sets the mid level for the profile in the repository.
+     *
+     * @param mid The new mid level to apply.
+     */
     fun setMid(mid: Int) {
         viewModelScope.launch {
             val index = currentProfileIndexFlow.value
@@ -97,6 +141,16 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    /**
+     * Sets the treble level for the currently selected profile.
+     *
+     * This function launches a coroutine to perform the following steps:
+     * 1. Retrieves the index of the currently selected profile.
+     * 2. Ensures that the profile exists. If it does not, logs an error and returns early.
+     * 3. Sets the treble level for the profile in the repository.
+     *
+     * @param treble The new treble level to apply.
+     */
     fun setTreble(treble: Int) {
         viewModelScope.launch {
             val index = currentProfileIndexFlow.value
@@ -111,6 +165,13 @@ class MainViewModel(private val application: Application) : AndroidViewModel(app
         }
     }
 
+    /**
+     * Creates a default user profile with the given name.
+     *
+     * @param name The name of the profile to create.
+     * @return The newly created user profile.
+     * By default the equalizer settings are set to 5 for bass, mid, and treble.
+     */
     private fun createDefaultProfile(name: String) : UserProfile {
         return UserProfile.newBuilder()
             .setName(name)

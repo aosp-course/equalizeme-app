@@ -1,21 +1,17 @@
 package com.example.equalizeme.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.services.profiles.UserProfileRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+
 
 open class MainViewModel(private val application: Application) : AndroidViewModel(application) {
     // CurrentProfile
@@ -25,7 +21,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
     //List of profiles
     var profilesFlow = repository.userProfilesFlow
 
-    val currentProfileFlow = profilesFlow.combine(currentProfileIndexFlow) { profiles, index ->
+    var currentProfileFlow = profilesFlow.combine(currentProfileIndexFlow) { profiles, index ->
         return@combine profiles.elementAtOrNull(index)
     }
 
@@ -86,7 +82,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
             // Ensure profile exists
             val profile = currentProfileFlow.firstOrNull()
             if(profile == null) {
-                Log.e("MainViewModel:setBass"," Profile not found!")
+                //Log.e("MainViewModel:setBass"," Profile not found!")
                 return@launch
             }
             repository.setBass(index, bass)
@@ -110,7 +106,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
             // Ensure profile exists
             val profile = currentProfileFlow.firstOrNull()
             if(profile == null) {
-                Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                //Log.e("MainViewModel:updateEqualizer"," Profile not found!")
                 return@launch
             }
             repository.setMid(index, mid)
@@ -134,7 +130,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
             // Ensure profile exists
             val profile = currentProfileFlow.firstOrNull()
             if(profile == null) {
-                Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                //Log.e("MainViewModel:updateEqualizer"," Profile not found!")
                 return@launch
             }
             repository.setTreble(index, treble)

@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "com.example.equalizeme.model";
+option java_multiple_files = true;
+
+message UserProfileList {
+    repeated UserProfile profiles = 1;
+}
+
+message UserProfile {
+    string name = 2;
+    EqualizerInfo equalizer_info = 3;
+}
+
+message EqualizerInfo {
+    int32 bass = 1;
+    int32 mid = 2;
+    int32 treble = 3;
+}

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundPrimary">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_your_profile"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="@dimen/title_top"
+        android:layout_marginStart="@dimen/title_start"
+        android:textSize="@dimen/title_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/profile_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <include
+            android:id="@+id/profile_item_1"
+            layout="@layout/item_perfil"
+            android:layout_width="@dimen/profile_card"
+            android:layout_height="@dimen/profile_card"
+            android:layout_marginEnd="@dimen/profile_margin_between"/>
+
+        <include
+            android:id="@+id/profile_item_2"
+            layout="@layout/item_perfil"
+            android:layout_width="@dimen/profile_card"
+            android:layout_height="@dimen/profile_card"
+            android:layout_marginEnd="@dimen/profile_margin_between"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/profile_item_3"
+            layout="@layout/item_perfil"
+            android:layout_width="@dimen/profile_card"
+            android:layout_height="@dimen/profile_card" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

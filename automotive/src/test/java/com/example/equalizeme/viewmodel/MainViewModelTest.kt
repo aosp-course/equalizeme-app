@@ -101,4 +101,108 @@ class MainViewModelTest {
         assertEquals(1, currentProfileIndexFlow.value)
     }
 
+    @Test
+    fun `setBass sets the bass level for the current profile when profile exists`() = runTest {
+        // Arrange
+        val profiles = listOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(profiles)
+        coEvery { mockRepository.createProfile(any()) } returns Unit
+        SUT.profilesFlow = flowOf(profiles)
+        SUT.repository = mockRepository
+        SUT.currentProfileFlow = flowOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.setBass(any(), any()) } returns Unit
+        val newBassLevel = 7
+
+        // Act
+        SUT.setBass(newBassLevel)
+        testScheduler.runCurrent()
+
+        //Assert
+        coVerify { mockRepository.setBass(any(), eq(7)) }
+    }
+
+    @Test
+    fun `setBass does not set the bass level when profile does not exist`() = runTest {
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(emptyList())
+        SUT.selectProfile(0)
+        SUT.repository = mockRepository
+        val newBassLevel = 7
+        coEvery { mockRepository.setBass(any(), any()) } returns Unit
+        SUT.currentProfileFlow = flowOf(null)
+
+        SUT.setBass(newBassLevel)
+        testScheduler.runCurrent()
+
+        coVerify(exactly = 0) { mockRepository.setBass(any(), any()) }
+    }
+
+    @Test
+    fun `setMid sets the bass level for the current profile when profile exists`() = runTest {
+        // Arrange
+        val profiles = listOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(profiles)
+        coEvery { mockRepository.createProfile(any()) } returns Unit
+        SUT.profilesFlow = flowOf(profiles)
+        SUT.repository = mockRepository
+        SUT.currentProfileFlow = flowOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.setMid(any(), any()) } returns Unit
+        val newLevel = 7
+
+        // Act
+        SUT.setMid(newLevel)
+        testScheduler.runCurrent()
+
+        //Assert
+        coVerify { mockRepository.setMid(any(), eq(7)) }
+    }
+
+    @Test
+    fun `setMid does not set the bass level when profile does not exist`() = runTest {
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(emptyList())
+        SUT.selectProfile(0)
+        SUT.repository = mockRepository
+        val newLevel = 7
+        coEvery { mockRepository.setMid(any(), any()) } returns Unit
+        SUT.currentProfileFlow = flowOf(null)
+
+        SUT.setBass(newLevel)
+        testScheduler.runCurrent()
+
+        coVerify(exactly = 0) { mockRepository.setMid(any(), any()) }
+    }
+
+    @Test
+    fun `setTreble sets the bass level for the current profile when profile exists`() = runTest {
+        // Arrange
+        val profiles = listOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(profiles)
+        coEvery { mockRepository.createProfile(any()) } returns Unit
+        SUT.profilesFlow = flowOf(profiles)
+        SUT.repository = mockRepository
+        SUT.currentProfileFlow = flowOf(UserProfile.newBuilder().setName("Profile 1").build())
+        coEvery { mockRepository.setTreble(any(), any()) } returns Unit
+        val newLevel = 7
+
+        // Act
+        SUT.setTreble(newLevel)
+        testScheduler.runCurrent()
+
+        //Assert
+        coVerify { mockRepository.setTreble(any(), eq(7)) }
+    }
+
+    @Test
+    fun `setTreble does not set the bass level when profile does not exist`() = runTest {
+        coEvery { mockRepository.userProfilesFlow } returns flowOf(emptyList())
+        SUT.selectProfile(0)
+        SUT.repository = mockRepository
+        val newLevel = 7
+        coEvery { mockRepository.setTreble(any(), any()) } returns Unit
+        SUT.currentProfileFlow = flowOf(null)
+
+        SUT.setBass(newLevel)
+        testScheduler.runCurrent()
+
+        coVerify(exactly = 0) { mockRepository.setTreble(any(), any()) }
+    }
 }

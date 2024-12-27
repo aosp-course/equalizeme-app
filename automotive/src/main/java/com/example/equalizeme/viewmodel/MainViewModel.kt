@@ -106,7 +106,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
             // Ensure profile exists
             val profile = currentProfileFlow.firstOrNull()
             if(profile == null) {
-                //Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                //Log.e("MainViewModel:setMid"," Profile not found!")
                 return@launch
             }
             repository.setMid(index, mid)
@@ -130,7 +130,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
             // Ensure profile exists
             val profile = currentProfileFlow.firstOrNull()
             if(profile == null) {
-                //Log.e("MainViewModel:updateEqualizer"," Profile not found!")
+                //Log.e("MainViewModel:setTreble"," Profile not found!")
                 return@launch
             }
             repository.setTreble(index, treble)

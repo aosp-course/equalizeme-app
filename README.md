@@ -3,6 +3,9 @@
 
 O projeto **EqualizeMe** consiste em um aplicativo Android (EqualizeMe App) e um serviço (EqualizeMe Service) que juntos permitem aos usuários ajustar os níveis de áudio do dispositivo. A comunicação entre o aplicativo e o serviço é feita através de uma interface AIDL que define métodos para configurar os níveis de graves, médios e agudos.
 
+![image](https://github.com/user-attachments/assets/355781d6-c2ce-410f-a104-eb788e85cf68)
+*Figura 1: Diagrama de High Level Design mostrando a comunicação entre o app e o serviço.*
+
 #### Componentes do Projeto
 
 1. **EqualizeMe App**:
@@ -53,15 +56,15 @@ O projeto **EqualizeMe** consiste em um aplicativo Android (EqualizeMe App) e um
 
 - **Captura de Tela da Interface do Aplicativo**:
   ![image](https://github.com/user-attachments/assets/c0cdb4ff-68b5-4811-a4b1-28a3040a2ddf)
-  *Figura 1: Interface do usuário do EqualizeMe App para ajustar os níveis de áudio.*
+  *Figura 2: Interface do usuário do EqualizeMe App para ajustar os níveis de áudio.*
 
 - **Execução de Logs no Android Studio**:
   ![image](https://github.com/user-attachments/assets/30e2b900-0577-4933-b43d-44904c72740b)
-  *Figura 2: Exibição dos logs de execução no Android Studio mostrando a conexão entre o aplicativo e o serviço.*
+  *Figura 3: Exibição dos logs de execução no Android Studio mostrando a conexão entre o aplicativo e o serviço.*
 
 - **Confirmação de Ajustes de Áudio**:
   ![image](https://github.com/user-attachments/assets/b2c7bfce-a649-4046-8826-871a6284912e)
-  *Figura 3: Mensagem de confirmação de ajustes aplicados com sucesso.*
+  *Figura 4: Mensagem de confirmação de ajustes aplicados com sucesso.*
 
 #### Considerações Finais
 

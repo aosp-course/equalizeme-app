@@ -1,8 +1,16 @@
 package com.example.equalizeme.viewmodel
 
+import android.app.Activity
 import android.app.Application
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.equalizeme.IEqualizeMe
 import com.example.equalizeme.model.EqualizerInfo
 import com.example.equalizeme.model.UserProfile
 import com.example.equalizeme.services.profiles.UserProfileRepository
@@ -27,6 +35,33 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
 
     //List of equalizers
     val currentEqualizer = currentProfileFlow.map { profile -> profile?.equalizerInfo }
+
+    var iEqualizeMe: IEqualizeMe? = null
+
+    var isBound = false
+
+    val mConnection = object : ServiceConnection {
+
+        // Called when the connection with the service is established.
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            Log.d("MainViewModel", "onServiceConnected")
+            // Gets an instance of the IEqualizeInterface, which we can use to call on the service.
+            iEqualizeMe = IEqualizeMe.Stub.asInterface(service)
+            isBound = true
+        }
+
+        // Called when the connection with the service disconnects unexpectedly.
+        override fun onServiceDisconnected(className: ComponentName) {
+            Log.d("MainViewModel", "onServiceDisconnected")
+            iEqualizeMe = null
+            isBound = false
+        }
+    }
+
+    fun unbindService() {
+        Log.d("MainViewModel", "unbindService")
+        isBound = false
+    }
 
     /**
      * Adds a new user profile to the repository.
@@ -85,6 +120,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
                 //Log.e("MainViewModel:setBass"," Profile not found!")
                 return@launch
             }
+            iEqualizeMe?.setBass(bass)
             repository.setBass(index, bass)
         }
     }
@@ -109,6 +145,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
                 //Log.e("MainViewModel:setMid"," Profile not found!")
                 return@launch
             }
+            iEqualizeMe?.setMid(mid)
             repository.setMid(index, mid)
         }
     }
@@ -133,6 +170,7 @@ open class MainViewModel(private val application: Application) : AndroidViewMode
                 //Log.e("MainViewModel:setTreble"," Profile not found!")
                 return@launch
             }
+            iEqualizeMe?.setTreble(treble)
             repository.setTreble(index, treble)
         }
     }
